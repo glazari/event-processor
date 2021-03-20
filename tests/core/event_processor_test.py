@@ -72,13 +72,13 @@ def test_event_processor_register_event():
 
     for tc in test_cases:
         ep = EventProcessor(MockEventStream(), tc["storage"])
-        got = ep.register_event(tc["event_name"], tc["client"], tc["schema"])
+        got = ep.register_event(tc["client"], tc["event_name"], tc["schema"])
         assert got == tc["success"], f"Error on test_case: {tc['name']}"
 
         if not tc["success"]:
             continue
 
-        got = ep.get_event(tc["event_name"], tc["client"])
+        got = ep.get_event(tc["client"], tc["event_name"])
         assert got == tc["schema"], f"Error, stored schema does not match registerd: {tc['name']}"
 
 def test_event_processor_list_registerd_events():

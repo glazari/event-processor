@@ -1,3 +1,4 @@
+import logging
 import jsonschema
 from jsonschema import validators
 from core.types import EventStream
@@ -10,10 +11,11 @@ class EventProcessor:
         self.storage = storage
         self.schema_validator = validators.validator_for(False)
 
-    def register_event(self, event_name, client, event_schema):
+    def register_event(self, client, event_name, event_schema):
         try:
             self.schema_validator.check_schema(event_schema)
-        except jsonschema.SchemaError:
+        except jsonschema.SchemaError as e:
+            logging.error(e)
             return False
 
         success = self.storage.register_event(
@@ -21,7 +23,7 @@ class EventProcessor:
         )
         return success
 
-    def get_event(self, event_name, client):
+    def get_event(self, client, event_name):
         event_schema = self.storage.get_event(event_name, client)
         return event_schema
 
@@ -49,6 +51,7 @@ class EventProcessor:
         try:
             jsonschema.validate(data, schema)
             out = True
-        except jsonschema.ValidationError:
+        except jsonschema.ValidationError as e:
+            logging.error(e)
             out = False
         return out
