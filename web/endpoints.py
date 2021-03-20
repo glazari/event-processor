@@ -1,17 +1,18 @@
 import json
 from flask import Flask
 from flask import request
+from flask import current_app
 from core.event_processor import EventProcessor
 from mocks.storage import MockSchemaStorage
 from mocks.stream import MockEventStream
 
 app = Flask(__name__)
-
-db = MockSchemaStorage()
+app.db = MockSchemaStorage()
+app.es = MockEventStream()
 
 @app.route("/<client>/<event_name>/send_event", methods=["POST"])
 def send_event(client, event_name):
-    ep = EventProcessor(MockEventStream(), db)
+    ep = EventProcessor(current_app.es, current_app.db)
     data = request.form.get("event")
     if not data:
         return {"code":"FAILED", "msg": "'event' key not in data"}, 400
@@ -27,7 +28,7 @@ def send_event(client, event_name):
 
 @app.route("/<client>/<event_name>/register_event", methods=["POST"])
 def register_event(client, event_name):
-    ep = EventProcessor(MockEventStream(), db)
+    ep = EventProcessor(current_app.es, current_app.db)
     schema = request.form.get("event_schema")
     if not schema:
         return {"code":"FAILED", "msg": "'event_schema' key not in data"}, 400
@@ -44,8 +45,7 @@ def register_event(client, event_name):
 
 @app.route("/<client>/<event_name>/schema", methods=["GET"])
 def get_event_schema(client, event_name):
-    ep = EventProcessor(MockEventStream(), db)
-    print(db.events_schemas)
+    ep = EventProcessor(current_app.es, current_app.db)
     schema = ep.get_event(client, event_name)
     if schema is None:
         return {"code":"FAILED", "msg": "event not registered"}, 400
@@ -54,7 +54,7 @@ def get_event_schema(client, event_name):
 
 @app.route("/<client>/list_events", methods=["GET"])
 def list_registered_events(client):
-    ep = EventProcessor(MockEventStream(), db)
+    ep = EventProcessor(current_app.es, current_app.db)
     events = ep.list_registered_events(client)
     return {"code":"SUCCEEDED", "events":events, "msg": "schema recovered"}, 200
 
