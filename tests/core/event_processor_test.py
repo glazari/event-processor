@@ -1,5 +1,3 @@
-import jsonschema
-
 from core.event_processor import EventProcessor
 from core.types import EventSender
 from mocks.storage import MockStorage
