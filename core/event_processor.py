@@ -34,7 +34,16 @@ class EventProcessor:
         return registered_events
 
     def receive_event(self, client: str, event_name: str, data: dict):
-        pass
+        schema = self.storage.get_event(event_name, client)
+        if not schema:
+            return False
+
+        valid_event = self._valid_event(data, schema)
+        if not valid_event:
+            return False
+
+        succ = self.sender.send(client, event_name, data)
+        return succ
 
     def _valid_event(self, data: dict, schema: dict):
         try:
