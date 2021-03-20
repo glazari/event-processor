@@ -1,7 +1,5 @@
-from typing import List
-from typing import Optional
-
 import jsonschema
+from jsonschema import validators
 from core.types import EventSender
 from core.types import Storage
 
@@ -10,9 +8,22 @@ class EventProcessor:
     def __init__(self, sender: EventSender, storage: Storage):
         self.sender = sender
         self.storage = storage
+        self.schema_validator = validators.validator_for(False)
 
     def register_event(self, event_name, client, event_schema):
-        pass
+        try:
+            self.schema_validator.check_schema(event_schema)
+        except jsonschema.SchemaError:
+            return False
+
+        success = self.storage.register_event(
+            event_name, client, event_schema
+        )
+        return success
+
+    def get_event(self, event_name, client):
+        event_schema = self.storage.get_event(event_name, client)
+        return event_schema
 
     def list_registered_events(self, client):
         pass
@@ -24,6 +35,6 @@ class EventProcessor:
         try:
             jsonschema.validate(data, schema)
             out = True
-        except jsonschema.ValidationError as e: 
+        except jsonschema.ValidationError:
             out = False
         return out
