@@ -20,12 +20,14 @@ class EventStream:
 
         return a success bool
         """
+        raise NotImplementedError("send")
 
     def list_events(self, client: str, event: str) -> List[dict]:
         """ Returns current contents of stream topic
 
         mostly used for testing
         """
+        raise NotImplementedError("list_events")
 
 class SchemaStorage:
     """ Interface for interacting with the SchemaStorage """
@@ -35,10 +37,13 @@ class SchemaStorage:
         returns true on success
         returns false if another event is registered with this
         """
+        raise NotImplementedError("register_event")
 
     def get_event(self, event_name: str, client: str) -> dict:
         """ Returns the stored schema for this name, None if not present"""
+        raise NotImplementedError("get_event")
 
     def list_events(self) -> List[tuple]:
         """ Returns a list of all events as a tuple (client, event_name, schema)
         """
+        raise NotImplementedError("list_events")
