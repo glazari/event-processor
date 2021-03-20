@@ -1,11 +1,11 @@
 import jsonschema
 from jsonschema import validators
-from core.types import EventSender
-from core.types import Storage
+from core.types import EventStream
+from core.types import SchemaStorage
 
 
 class EventProcessor:
-    def __init__(self, sender: EventSender, storage: Storage):
+    def __init__(self, sender: EventStream, storage: SchemaStorage):
         self.sender = sender
         self.storage = storage
         self.schema_validator = validators.validator_for(False)

@@ -1,6 +1,6 @@
 from core.event_processor import EventProcessor
-from core.types import EventSender
-from mocks.storage import MockStorage
+from core.types import EventStream
+from mocks.storage import MockSchemaStorage
 
 
 def test_event_processor_valid_event():
@@ -37,7 +37,7 @@ def test_event_processor_valid_event():
 
 
     for tc in test_cases:
-        ep = EventProcessor(EventSender(), MockStorage())
+        ep = EventProcessor(EventStream(), MockSchemaStorage())
         got = ep._valid_event(tc["data"], tc["schema"])
         assert got == tc["out"], f"Error on test_case: {tc['name']}"
 
@@ -49,7 +49,7 @@ def test_event_processor_register_event():
             "client": "client1",
             "event_name": "new_event",
             "schema": {"type":"object","required":["color"]},
-            "storage": MockStorage(),
+            "storage": MockSchemaStorage(),
             "success":True,
         },
         {
@@ -57,7 +57,7 @@ def test_event_processor_register_event():
             "client": "client1",
             "event_name": "old_event",
             "schema": {"type":"object","required":["color"]},
-            "storage": MockStorage({("client1","old_event"): {}}),
+            "storage": MockSchemaStorage({("client1","old_event"): {}}),
             "success":False,
         },
         {
@@ -65,13 +65,13 @@ def test_event_processor_register_event():
             "client": "client1",
             "event_name": "new_event",
             "schema": {"type":"random_type"},
-            "storage": MockStorage(),
+            "storage": MockSchemaStorage(),
             "success":False,
         },
     ]
 
     for tc in test_cases:
-        ep = EventProcessor(EventSender(), tc["storage"])
+        ep = EventProcessor(EventStream(), tc["storage"])
         got = ep.register_event(tc["event_name"], tc["client"], tc["schema"])
         assert got == tc["success"], f"Error on test_case: {tc['name']}"
 
@@ -85,7 +85,7 @@ def test_event_processor_list_registerd_events():
     test_cases = [
         {
             "name": "base case",
-            "storage":MockStorage({
+            "storage":MockSchemaStorage({
                 ("a","e1"): "",
                 ("a","e2"): "",
                 ("b","e1"): "",
@@ -102,7 +102,7 @@ def test_event_processor_list_registerd_events():
     ]
 
     for tc in test_cases:
-        ep = EventProcessor(EventSender(), tc["storage"])
+        ep = EventProcessor(EventStream(), tc["storage"])
         registered_events = ep.list_registered_events(tc["query_client"])
         for event in tc["contains"]:
             assert event in registered_events, f"{tc['name']}: '{event}' not found"

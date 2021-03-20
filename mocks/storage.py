@@ -1,7 +1,7 @@
-from core.types import Storage
+from core.types import SchemaStorage
 
 
-class MockStorage(Storage):
+class MockSchemaStorage(SchemaStorage):
     def __init__(self, starter=None):
         if starter is None:
             starter = dict()
