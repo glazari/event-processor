@@ -26,7 +26,12 @@ class EventProcessor:
         return event_schema
 
     def list_registered_events(self, client):
-        pass
+        registered_events = [
+                (c, e)
+                for c, e, _ in self.storage.list_events()
+                if c == client
+        ]
+        return registered_events
 
     def receive_event(self, client: str, event_name: str, data: dict):
         pass

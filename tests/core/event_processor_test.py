@@ -80,3 +80,32 @@ def test_event_processor_register_event():
 
         got = ep.get_event(tc["event_name"], tc["client"])
         assert got == tc["schema"], f"Error, stored schema does not match registerd: {tc['name']}"
+
+def test_event_processor_list_registerd_events():
+    test_cases = [
+        {
+            "name": "base case",
+            "storage":MockStorage({
+                ("a","e1"): "",
+                ("a","e2"): "",
+                ("b","e1"): "",
+            }),
+            "query_client":"a",
+            "contains": [
+                ("a","e1"),
+                ("a","e2"),
+            ],
+            "not contains": [
+                ("b","e1"),
+            ],
+        },
+    ]
+
+    for tc in test_cases:
+        ep = EventProcessor(EventSender(), tc["storage"])
+        registered_events = ep.list_registered_events(tc["query_client"])
+        for event in tc["contains"]:
+            assert event in registered_events, f"{tc['name']}: '{event}' not found"
+
+        for event in tc["not contains"]:
+            assert event not in registered_events, f"{tc['name']}: '{event}' should not be present"

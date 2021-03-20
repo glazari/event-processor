@@ -23,6 +23,6 @@ class MockStorage(Storage):
         return self.events_schemas[key]
 
     def list_events(self):
-        for key,schema in self.events_schema.items():
+        for key,schema in self.events_schemas.items():
             client, event_name = key
             yield (client, event_name, schema)
