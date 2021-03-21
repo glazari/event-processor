@@ -23,3 +23,17 @@ services:
       - POSTGRES_DB=postgres
     volumes:
       - ./schema_storages/postgres_init.sql:/docker-entrypoint-initdb.d/init.sql
+  zookeeper:
+    image: wurstmeister/zookeeper
+  kafka:
+    depends_on:
+     - zookeeper
+    image: wurstmeister/kafka:0.10.1.0-2
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      # KAFKA_CREATE_TOPICS: "lhama_second_step:1:1"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ADVERTISED_HOST_NAME: "kafka"
+      KAFKA_ADVERTISED_PORT: 9092
+      DOCKER_API_VERSION: 1.22

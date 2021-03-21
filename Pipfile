@@ -6,12 +6,14 @@ verify_ssl = true
 [dev-packages]
 pytest = "*"
 pylint = "*"
+ipython = "*"
 
 [packages]
 jsonschema = "*"
 flask = "*"
 requests = "*"
 psycopg2 = "*"
+kafka-python = "*"
 
 [requires]
 python_version = "3.6"
