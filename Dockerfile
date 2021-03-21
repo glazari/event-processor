@@ -11,4 +11,4 @@ RUN pipenv install --system --deploy
 
 COPY . .
 
-CMD FLASK_APP=web/endpoints.py flask run
+CMD flask run --host='0.0.0.0'
