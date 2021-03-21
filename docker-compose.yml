@@ -1,0 +1,15 @@
+version: "3.7"
+
+services:
+  webserver:
+    build:
+      context: .
+    volumes:
+      - ./:/home
+    ports:
+      - "5000:5000"
+    command: flask run --host='0.0.0.0'
+    environment:
+      FLASK_ENV: development
+      PYTHONPATH: .
+      FLASK_APP: web/endpoints.py 
