@@ -9,6 +9,7 @@ from core.event_processor import EventProcessor
 from schema_storages.mock import MockSchemaStorage
 from schema_storages.postgres import PostgresSchemaStorage
 from event_streams.mock import MockEventStream
+from event_streams.kafka_stream import KafkaEventStream
 
 app = Flask(__name__)
 app.db = MockSchemaStorage()
@@ -72,3 +73,4 @@ def try_json_decode(data:str) -> dict:
 
 if os.environ.get('TEST_ENV') != 'TRUE':
     app.db = PostgresSchemaStorage("postgres", "5432", "admin", "admin")
+    app.es = KafkaEventStream("kafka:9092")
