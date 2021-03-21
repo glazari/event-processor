@@ -1,13 +1,19 @@
+import os
 import unittest
 import json
 
 from schema_storages.mock import MockSchemaStorage
 from event_streams.mock import MockEventStream
-from web.endpoints import app
+
+# this is set for the web app not to try to connect to postgres or kafka on tests
+os.environ['TEST_ENV'] = 'TRUE'
 
 class EndpointTests(unittest.TestCase):
 
     def setUp(self):
+        # This import is out of the top level so that we can
+        # set the TEST_ENV variable
+        from web.endpoints import app
         app.testing = True
         app.db = MockSchemaStorage()
         app.es = MockEventStream()

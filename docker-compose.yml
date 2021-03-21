@@ -13,6 +13,8 @@ services:
       FLASK_ENV: development
       PYTHONPATH: .
       FLASK_APP: web/endpoints.py 
+    depends_on:
+      - postgres
   postgres:
     image: postgres:13.2
     ports:

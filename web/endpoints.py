@@ -1,3 +1,4 @@
+import os
 import json
 
 from flask import Flask
@@ -6,6 +7,7 @@ from flask import current_app
 
 from core.event_processor import EventProcessor
 from schema_storages.mock import MockSchemaStorage
+from schema_storages.postgres import PostgresSchemaStorage
 from event_streams.mock import MockEventStream
 
 app = Flask(__name__)
@@ -67,3 +69,6 @@ def try_json_decode(data:str) -> dict:
     except json.JSONDecodeError:
         out = None
     return out
+
+if os.environ.get('TEST_ENV') != 'TRUE':
+    app.db = PostgresSchemaStorage("postgres", "5432", "admin", "admin")
