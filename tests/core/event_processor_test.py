@@ -1,6 +1,6 @@
 from core.event_processor import EventProcessor
-from mocks.storage import MockSchemaStorage
-from mocks.stream import MockEventStream
+from schema_storages.mock import MockSchemaStorage
+from event_streams.mock import MockEventStream
 
 
 def test_event_processor_valid_event():

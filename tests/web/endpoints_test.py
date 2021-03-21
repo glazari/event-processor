@@ -1,9 +1,8 @@
 import unittest
 import json
-import pytest
 
-from mocks.storage import MockSchemaStorage
-from mocks.stream import MockEventStream
+from schema_storages.mock import MockSchemaStorage
+from event_streams.mock import MockEventStream
 from web.endpoints import app
 
 class EndpointTests(unittest.TestCase):

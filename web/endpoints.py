@@ -1,10 +1,12 @@
 import json
+
 from flask import Flask
 from flask import request
 from flask import current_app
+
 from core.event_processor import EventProcessor
-from mocks.storage import MockSchemaStorage
-from mocks.stream import MockEventStream
+from schema_storages.mock import MockSchemaStorage
+from event_streams.mock import MockEventStream
 
 app = Flask(__name__)
 app.db = MockSchemaStorage()
