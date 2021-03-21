@@ -11,6 +11,7 @@ pylint = "*"
 jsonschema = "*"
 flask = "*"
 requests = "*"
+psycopg2 = "*"
 
 [requires]
 python_version = "3.6"
