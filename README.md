@@ -65,8 +65,13 @@ python producer.py colors
 
 ## Parts
 
+This Project consists of 4 parts:
+- Business Logic
+- HTTP entrypoint
+- Schema Storage
+- Event Stream
 
-- GRPAH description
+Below I explain each of these parts.
 
 ### Business Logic
 
